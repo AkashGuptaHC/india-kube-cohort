@@ -5,7 +5,7 @@ metadata:
 spec:
   selector:
     app: nginx
-  type: LoadBalancer # This is the key part to create an external load balancer
+  type: LoadBalancer
   ports:
   - name: http
     port: 80 # The port where the service is accessible
