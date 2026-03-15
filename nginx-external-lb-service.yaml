@@ -3,8 +3,8 @@ kind: Service
 metadata:
   name: nginx-external-loadbalancer
   annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: external                #annotations are where the things become different
-    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing       #annotations are where the things become different
+    service.beta.kubernetes.io/aws-load-balancer-type: external                #annotations are where the things become different. Read more about annotations here https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/.
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing       #annotations are where the things become different. Read more about annotations here https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/.
 spec:
   selector:
     app: nginx
