@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-external-loadbalancer
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: external                #annotations are where the things become different
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing       #annotations are where the things become different
+spec:
+  selector:
+    app: nginx
+  type: LoadBalancer
+  ports:
+  - port: 80 # The port where the service is accessible
+    targetPort: 80 # The port on the container that receives traffic
