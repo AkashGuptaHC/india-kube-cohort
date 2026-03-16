@@ -1,0 +1,28 @@
+1. Create an IAM OIDC provider. You can skip this step if you already have one for your cluster:
+   eksctl utils associate-iam-oidc-provider --region <region-code> --cluster <your-cluster-name> --approve
+
+2. Download an IAM policy for the Load Balancer Controller using the following commands (doesn't work for US Gov Cloud & China region):
+   curl -o iam-policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-controller/v3.1.0/docs/install/iam_policy.json
+
+3. Create an IAM policy named AWSLoadBalancerControllerIAMPolicy:
+   aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam-policy.json
+
+4. Create an IAM role and Kubernetes ServiceAccount for the LBC. Use the ARN from the previous step.
+   eksctl create iamserviceaccount --cluster=<cluster-name> --namespace=kube-system --name=aws-load-balancer-controller --attach-policy-arn=arn:aws:iam::<AWS_ACCOUNT_ID>:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --region <region-code> --approve
+
+5. Add the EKS chart repo to Helm
+   helm repo add eks https://aws.github.io/eks-charts
+
+6. Helm install command for clusters with IRSA:
+   helm install aws-load-balancer-controller eks/aws-load-balancer-controller --set clusterName=<your-cluster-name> -n kube-system --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --set region=<your-cluster-region> --set vpcId=<your-cluster-vpc>
+
+7. Verify installation:
+   helm list -A
+
+   Sample response:
+
+   NAME                        	NAMESPACE  	REVISION	UPDATED                             	STATUS  	CHART                             	APP VERSION
+   aws-load-balancer-controller	kube-system	1       	2026-03-16 17:06:28.316024 +0530 IST	deployed	aws-load-balancer-controller-3.0.0	v3.0.0
+
+8. Check the controller pods:
+   kubectl get pods -n kube-system | grep aws-load-balancer-controller
