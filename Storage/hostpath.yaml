@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hostpath-pod
+spec:
+  containers:
+  - name: my-container
+    image: nginx
+    volumeMounts:
+    - name: host-volume
+      mountPath: /demo # Mount path inside the container
+  volumes:
+    - name: host-volume
+      hostPath:
+        # Path to the directory on the host node
+        path: /etc/systemd/system
+        # This field is optional.
+        # DirectoryOrCreate: If the path does not exist, a directory is created.
+        # FileOrCreate: If the path does not exist, a file is created.
+        # Directory: The path must be a directory.
+        # File: The path must be a file.
+        # Create a directory if it does not already exist
+        type: DirectoryOrCreate
