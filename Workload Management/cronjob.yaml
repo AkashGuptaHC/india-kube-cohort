@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: example-cronjob
+spec:
+  schedule: "* * * * *" # Standard cron syntax (min, hour, dom, mon, dow), this runs every minute
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 10 # Deletes the pod after 10 seconds of finishing the task
+      template:
+        spec:
+          containers:
+          - name: cron-worker
+            image: busybox:1.28
+            command: ["sh", "-c", "date; echo 'Hello from CronJob'"]
+          restartPolicy: OnFailure
