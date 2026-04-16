@@ -1,0 +1,14 @@
+# Job: Runs a finite task to completion (e.g., a database migration)
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: database-migration-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: migration-task
+        image: busybox
+        command: ["sh", "-c", "echo 'Running migrations...'; sleep 10; echo 'Done!'"]
+      restartPolicy: Never
+  backoffLimit: 4
